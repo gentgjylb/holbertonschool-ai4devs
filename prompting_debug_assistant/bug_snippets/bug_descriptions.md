@@ -1,24 +1,31 @@
+# Bug Descriptions
+
 ## Bug 1 – bug1.py
-**Intended Behavior**: Return the last `n` items from a list.
-**Issue Type**: Syntax error.
-**Notes**: The function definition is missing a colon after `def get_last_items(items, n)`, so the code cannot be parsed.
+**Intended Behavior**: Return the last n items of a list.  
+**Issue Type**: Off-by-one error.  
+**Notes**: The function returns n+1 items instead of n when n < len(items). Should use `len(items) - n` as the start index.
 
 ## Bug 2 – bug2.js
-**Intended Behavior**: Filter a score list to return only odd scores.
-**Issue Type**: Logical error.
-**Notes**: The condition uses `score % 2 === 0`, so the function returns even scores instead of odd ones.
+**Intended Behavior**: Remove duplicate numbers from an array and return them in ascending order.  
+**Issue Type**: Logical error (incorrect condition in implementation).  
+**Notes**: The function pushes a number only when it already exists in `result`, so new unique values never get added. The condition should be inverted (add when NOT present: `!result.includes(numbers[i])`).
 
 ## Bug 3 – bug3.java
-**Intended Behavior**: Convert and print a username for a valid user ID.
-**Issue Type**: Runtime exception.
-**Notes**: When `userId` is not "admin", `user` stays `null`, and `user.toUpperCase()` throws a `NullPointerException`.
+**Intended Behavior**: Calculate the average length of non-null strings in a list, ignoring nulls.  
+**Issue Type**: Runtime exception (NullPointerException).  
+**Notes**: No null check before calling `str.length()`. Should skip nulls to avoid exception.
 
-## Bug 4 – bug4.cpp
-**Intended Behavior**: Sum all values in a vector.
-**Issue Type**: Off-by-one / loop logic issue.
-**Notes**: The loop condition uses `i <= values.size()`, causing an out-of-range access on the final iteration.
+## Bug 4 – bug4.py
+**Intended Behavior**: Calculate the sum of all values in a dictionary where the values are numbers stored as strings.  
+**Issue Type**: Data type misuse (numeric handling error).  
+**Notes**: Values are numeric strings, but `total` is initialized as a string and `+=` performs concatenation (e.g. "10" + "5" -> "105"). `total` should be numeric (e.g. `0`) and each `value` should be converted (e.g. `int(value)`) before adding.
 
-## Bug 5 – bug5.py
-**Intended Behavior**: Save a user profile to JSON and then load it back.
-**Issue Type**: Misuse of data types / libraries.
-**Notes**: `load_profile` calls `json.loads` on a dictionary instead of a JSON string, causing a `TypeError`.
+## Bug 5 – bug5.js
+**Intended Behavior**: Fetch user data from an API endpoint and return the user's name in uppercase. The function is intended to use `async/await` so callers can `await` the final string result.  
+**Issue Type**: Syntax error (async/await misuse).  
+**Notes**: `await` can only be used inside an `async` function (or at the top level in specific module contexts). Here, `await fetch(...)` is inside a regular function, which causes a syntax error. Fix by declaring `async function fetchUserNameUpper(...) { ... }` (and then awaiting it from the caller).
+
+## Bug 6 – bug6.py
+**Intended Behavior**: Find the first pair of consecutive numbers in a list that sum to a target value.  
+**Issue Type**: Logic error (infinite loop).  
+**Notes**: The loop never increments the index when there is no match, so `i` stays the same and the `while` condition never changes (infinite loop). Fix by incrementing `i` on every iteration (and only returning when a match is found).
