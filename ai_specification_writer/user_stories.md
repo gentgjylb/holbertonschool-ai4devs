@@ -1,121 +1,79 @@
-# User Stories
-
 ### User Story 1
-As a blind audiobook listener, I want to browse the library with voice navigation so that I can discover new titles without relying on visual menus.
+As a spec author, I want to start a new spec from a guided template so that I can capture the required sections without missing anything.
 
 **Acceptance Criteria**:
-- User can speak or select spoken commands to open categories and search results.
-- The app reads back title, author, and duration for each item.
-- Voice navigation works across library, search, and book details screens.
+- User can create a new spec and is prompted for the core sections (problem, scope, constraints, non-goals).  
+- System prevents publishing/exporting until required sections are completed.  
+- User can save progress and return later.  
 
 **Priority**: MVP
 
 ### User Story 2
-As a user with dyslexia, I want a dyslexia-friendly reading mode for text summaries so that I can understand audiobook details more easily.
+As a spec author, I want to turn a rough prompt into a structured draft so that I can move from idea to implementable spec quickly.
 
 **Acceptance Criteria**:
-- Summary and metadata screens can toggle dyslexia-friendly fonts and spacing.
-- High-contrast text option is available on book details and settings pages.
-- The selected accessibility mode persists across sessions.
+- User provides a short description and the system produces a draft with headings and bullet points.  
+- Draft includes at least: scope, assumptions, and edge cases.  
+- User can edit the generated content before saving.  
 
 **Priority**: MVP
 
 ### User Story 3
-As a busy commuter, I want to start a book at my preferred playback speed so that I can consume audiobooks efficiently.
+As a spec author, I want to generate acceptance criteria from requirements so that the work is testable and unambiguous.
 
 **Acceptance Criteria**:
-- Playback speed can be set from the player screen before playback begins.
-- The app remembers the last-used speed for future sessions.
-- Speed changes apply immediately during playback.
+- User selects a requirement and requests acceptance criteria generation.  
+- System outputs criteria in a clear, testable format (e.g., Given/When/Then or checklist).  
+- User can accept, edit, or delete generated criteria.  
 
 **Priority**: MVP
 
 ### User Story 4
-As a frequent listener, I want to save bookmarks during playback so that I can return to important sections quickly.
+As a spec author, I want to record assumptions and open questions so that unknowns are visible and can be resolved early.
 
 **Acceptance Criteria**:
-- A bookmark button is available on the player screen.
-- Saved bookmarks include timestamp and optional voice-note text.
-- Bookmarks are listed and accessible from the current audiobook details screen.
+- User can add an assumption or question with a status (open/resolved).  
+- Each item can be assigned an owner or noted as "unassigned".  
+- Resolved items remain visible but clearly marked.  
 
 **Priority**: High
 
 ### User Story 5
-As an audiobook creator, I want to upload new titles and add metadata so that my content is discoverable by the right audience.
+As a spec reviewer, I want to review a spec against a checklist so that I can approve it consistently.
 
 **Acceptance Criteria**:
-- Creator portal supports uploading audio files and cover art.
-- Metadata fields include title, author, narrator, language, and categories.
-- Creators can save drafts and publish when data is complete.
+- Reviewer sees a checklist aligned to the spec sections (scope, constraints, non-goals, acceptance criteria).  
+- Reviewer can mark items as pass/fail and leave a comment.  
+- System shows an overall review status (needs changes/approved).  
 
 **Priority**: High
 
 ### User Story 6
-As an admin, I want to review and approve creator uploads so that the platform maintains content quality and accessibility standards.
+As a spec reviewer, I want to see what changed since the last review so that I can re-approve quickly.
 
 **Acceptance Criteria**:
-- Admin console shows a moderation queue for pending audiobooks.
-- Each item includes metadata, audio preview, and accessibility checks.
-- Admins can approve, reject, or request changes with feedback.
-
-**Priority**: Medium
-
-### User Story 7
-As an offline listener, I want to download books for offline playback so that I can listen without an internet connection.
-
-**Acceptance Criteria**:
-- User can mark titles for offline download on the book details screen.
-- Download progress is shown and completed downloads appear in an offline library.
-- Playback of downloaded titles works without network access.
+- Reviewer can view a change summary between versions (added/removed/edited sections).  
+- System highlights changes to acceptance criteria separately from narrative text.  
+- Reviewer can request changes or approve the new version.  
 
 **Priority**: High
 
-### User Story 8
-As a listener, I want quick summaries of audiobooks so that I can decide whether a full book is worth listening to.
+### User Story 7
+As a spec author, I want to link requirements to acceptance criteria so that coverage is easy to verify.
 
 **Acceptance Criteria**:
-- Quick Listen screen offers condensed versions with estimated listen time.
-- Summary cards show genre, length, and key takeaways.
-- Users can start a quick summary directly from the summary screen.
+- User can create a link between a requirement and one or more acceptance criteria.  
+- System shows a coverage indicator (e.g., "3/5 requirements have criteria").  
+- System flags requirements with zero linked criteria.  
 
 **Priority**: Medium
 
-### User Story 9
-As a returning user, I want to continue listening from where I left off across devices so that I do not lose my place.
+### User Story 8
+As a spec author, I want to export the spec to Markdown so that I can share it in a repository and review it via pull requests.
 
 **Acceptance Criteria**:
-- Playback position syncs to the user account after pausing or closing the app.
-- When logging in on another device, the last played position is offered.
-- Sync works for both full audiobooks and Quick Listen summaries.
+- User can export a spec to a single Markdown document.  
+- Export includes the vision/problem statement, scope, constraints, and acceptance criteria.  
+- Exported Markdown preserves headings and lists in a readable format.  
 
 **Priority**: MVP
-
-### User Story 10
-As a visually impaired user, I want audio feedback for navigation actions so that I know when a command is executed successfully.
-
-**Acceptance Criteria**:
-- Button presses and menu selections trigger short audio cues.
-- The app confirms actions like download start, bookmark saved, and playback started.
-- Audio feedback can be toggled on or off in settings.
-
-**Priority**: Medium
-
-### User Story 11
-As a content creator, I want analytics on listener engagement so that I can improve my audiobook offerings.
-
-**Acceptance Criteria**:
-- Creator dashboard shows listens, completion rate, and average listening duration.
-- Analytics are filterable by title and time range.
-- Creator can export engagement data to CSV.
-
-**Priority**: Low
-
-### User Story 12
-As a user with limited time, I want to filter search results by estimated listen time so that I can choose books that fit my schedule.
-
-**Acceptance Criteria**:
-- Search filters include duration ranges such as under 30 minutes, 30–60 minutes, and 60+ minutes.
-- Filtered results update immediately in the library view.
-- The selected duration filter remains active until cleared.
-
-**Priority**: Medium
