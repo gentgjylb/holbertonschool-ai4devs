@@ -1,24 +1,31 @@
-# Application Concept – iCan Audiobooks
+# Application Concept – SmartCloset Lite
 
 ## Application
-A voice-first audiobook platform designed for accessibility, inclusive listening, and creator-driven content management. iCan Audiobooks enables blind and dyslexic users to discover, consume, and manage audiobooks with audio navigation, accessibility modes, and cross-device syncing.
+SmartCloset Lite is a simple web app to manage your closet. Users add their clothes, create outfits, and plan what to wear on different days. The goal is a clean, nice UI with easy features.
 
 ## Core Features
-- Voice-guided library browsing and audiobook search
-- Accessible book details with dyslexia-friendly text, high contrast, and screen reader support
-- Player controls for playback speed, pitch, narrator voice selection, and bookmarks
-- Offline downloads and cross-device progress sync
-- Creator portal for uploading and managing audiobook content and metadata
-- Admin console for moderation, user management, and analytics
+- Closet items
+	- Add/edit/remove items with a photo and basic details (category, color, season, tags)
+	- Search and filter items
+	- Mark items as available or in laundry
+- Outfits
+	- Combine items into an outfit and save it
+	- Add simple notes (occasion, season)
+- Planner
+	- Pick an outfit for a date
+	- Weekly view
+	- Show a small “recently worn” hint
+- Simple suggestions (optional)
+	- Suggest outfits based on occasion/season
 
 ## User Types
-- Listeners: blind or dyslexic users who need accessible playback, summaries, and easy discovery
-- Busy users: people who want quick, efficient audiobook consumption with speed controls and summaries
-- Creators: authors and narrators who upload audiobooks, manage metadata, and track engagement
-- Admins: moderation and platform operations staff who enforce content quality and oversee analytics
+- Users: want to plan outfits faster and reuse clothes better
+- Admins (optional): handle support and moderation if sharing is added
 
 ## Constraints
-- Scalability: support growing libraries and concurrent users across mobile and web platforms
-- Compliance: meet accessibility standards such as WCAG and support assistive technologies
-- Platforms: mobile-first design with responsive web support and offline-capable playback
-- Data privacy: secure user profiles, subscription data, and creator content under standard privacy controls
+- Web-only and responsive (mobile + desktop)
+- Privacy first: closet is private by default; sharing is opt-in
+- GDPR-friendly: export/delete user data
+- Fast browsing and filtering even with many items
+- Optimize images to reduce storage and loading time
+- Reliable saves (avoid losing edits)
