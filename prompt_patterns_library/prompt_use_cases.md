@@ -11,6 +11,11 @@
   - **Input**: Code block  
   - **Output**: Rewritten code with consistent style  
 
+- **Code Review**
+  - **Goal**: Identify potential code smells and anti-patterns
+  - **Input**: Pull request diff or source code block
+  - **Output**: Constructive review feedback and suggested improvements
+
 ## Debugging
 - **Error Explanation**
   - **Goal**: Understand cryptic error messages
@@ -53,3 +58,24 @@
   - **Goal**: Find unusual scenarios that could break the application
   - **Input**: Function description and constraints
   - **Output**: A list of edge cases and corresponding test scenarios
+
+- **Integration Test Strategy**
+  - **Goal**: Plan effective tests for service-to-service communication
+  - **Input**: Architecture diagram or component dependencies description
+  - **Output**: A detailed strategy listing required integration tests and mock boundaries
+
+## Architecture & Design
+- **Database Schema Design**
+  - **Goal**: Design efficient normalized database schemas
+  - **Input**: Entity relationships and data requirements
+  - **Output**: SQL statements for table creation with foreign keys and indexes
+
+- **System Architecture Planning**
+  - **Goal**: Propose scalable high-level architecture decisions
+  - **Input**: System requirements, expected scale, and constraints
+  - **Output**: Suggested architecture with chosen technologies and component interactions
+
+- **API Endpoint Design**
+  - **Goal**: Follow RESTful best practices for new features
+  - **Input**: Feature requirements and data models
+  - **Output**: A list of RESTful endpoints, their HTTP methods, and payload structures
