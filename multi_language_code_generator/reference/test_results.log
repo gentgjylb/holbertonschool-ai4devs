@@ -1,7 +1,7 @@
 $ python3 -m unittest discover tests
-..........
+............
 ----------------------------------------------------------------------
-Ran 10 tests in 0.003s
+Ran 12 tests in 0.004s
 
 OK
 
@@ -16,5 +16,7 @@ Test Case Breakdown:
 - test_07.py (test_single_failed_request): PASS
 - test_08.py (test_arbitrary_whitespace): PASS
 - test_09.py (test_two_entries_different_visitors_both_fail): PASS
+- test_10.py (test_empty_lines_with_spaces): PASS
+- test_11.py (test_missing_ip_address_but_5_parts): PASS
 
 All tests pass perfectly for the Reference Implementation of the Log Analyzer.
