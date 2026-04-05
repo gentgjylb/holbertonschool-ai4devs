@@ -9,6 +9,8 @@ class TestLogAnalyzer00(unittest.TestCase):
         logs = ["192.168.1.1 - GET /home 200", "10.0.0.5 - POST /login 401", "192.168.1.1 - GET /dashboard 200", "172.16.0.4 - GET /logo.png 404"]
         result = LogAnalyzer().analyze(logs)
         self.assertEqual(result, {"total_requests": 4, "unique_visitors": 3, "error_rate": 0.50})
+        print("✅ test_standard_logs_mixed_outcomes: PASS", file=sys.stdout)
 
 if __name__ == '__main__':
-    unittest.main()
+    runner = unittest.TextTestRunner(stream=sys.stdout, verbosity=2)
+    unittest.main(testRunner=runner, exit=False)

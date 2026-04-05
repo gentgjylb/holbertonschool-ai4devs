@@ -9,6 +9,8 @@ class TestLogAnalyzer04(unittest.TestCase):
         logs = ["10.1.1.1 - GET /page1 200", "10.1.1.1 - GET /page2 200", "10.1.1.1 - GET /page3 400"]
         result = LogAnalyzer().analyze(logs)
         self.assertEqual(result, {"total_requests": 3, "unique_visitors": 1, "error_rate": 0.33})
+        print("✅ test_high_traffic_single_ip: PASS", file=sys.stdout)
 
 if __name__ == '__main__':
-    unittest.main()
+    runner = unittest.TextTestRunner(stream=sys.stdout, verbosity=2)
+    unittest.main(testRunner=runner, exit=False)

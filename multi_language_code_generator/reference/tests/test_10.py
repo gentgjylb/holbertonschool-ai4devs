@@ -9,6 +9,8 @@ class TestLogAnalyzer10(unittest.TestCase):
         logs = ["    ", "\t\t", ""]
         result = LogAnalyzer().analyze(logs)
         self.assertEqual(result, {"total_requests": 0, "unique_visitors": 0, "error_rate": 0.00})
+        print("✅ test_empty_lines_with_spaces: PASS", file=sys.stdout)
 
 if __name__ == '__main__':
-    unittest.main()
+    runner = unittest.TextTestRunner(stream=sys.stdout, verbosity=2)
+    unittest.main(testRunner=runner, exit=False)

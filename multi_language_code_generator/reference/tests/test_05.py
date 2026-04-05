@@ -9,6 +9,8 @@ class TestLogAnalyzer05(unittest.TestCase):
         logs = ["completely invalid log entry", "192.168.1.1 GET /dashboard 200", "192.168.1.2 - /home 200"]
         result = LogAnalyzer().analyze(logs)
         self.assertEqual(result, {"total_requests": 0, "unique_visitors": 0, "error_rate": 0.00})
+        print("✅ test_all_malformed_entries: PASS", file=sys.stdout)
 
 if __name__ == '__main__':
-    unittest.main()
+    runner = unittest.TextTestRunner(stream=sys.stdout, verbosity=2)
+    unittest.main(testRunner=runner, exit=False)

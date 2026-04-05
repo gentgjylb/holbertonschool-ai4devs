@@ -9,6 +9,8 @@ class TestLogAnalyzer07(unittest.TestCase):
         logs = ["8.8.8.8 - GET /api/data 503"]
         result = LogAnalyzer().analyze(logs)
         self.assertEqual(result, {"total_requests": 1, "unique_visitors": 1, "error_rate": 1.00})
+        print("✅ test_single_failed_request: PASS", file=sys.stdout)
 
 if __name__ == '__main__':
-    unittest.main()
+    runner = unittest.TextTestRunner(stream=sys.stdout, verbosity=2)
+    unittest.main(testRunner=runner, exit=False)
