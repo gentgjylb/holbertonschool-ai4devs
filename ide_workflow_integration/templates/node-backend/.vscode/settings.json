@@ -1,0 +1,17 @@
+{
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true,
+    "javascript": true
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "files.exclude": {
+    "node_modules/": true,
+    ".git/": true,
+    "coverage/": true
+  },
+  "cSpell.enabled": true
+}
