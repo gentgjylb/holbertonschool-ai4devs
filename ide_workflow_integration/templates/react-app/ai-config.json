@@ -1,0 +1,5 @@
+{
+  "github.copilot.enable": {"*": true, "javascriptreact": true},
+  "github.copilot.advanced": {"inlineSuggestEnable": true},
+  "automation.workflows": ["docs", "eslint_fix"]
+}

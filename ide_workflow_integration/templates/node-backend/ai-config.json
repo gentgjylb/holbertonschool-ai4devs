@@ -1,0 +1,5 @@
+{
+  "github.copilot.enable": {"*": true, "javascript": true},
+  "files.exclude": {"node_modules/": true, "logs/": true},
+  "automation.workflows": ["code_review", "pre_commit"]
+}

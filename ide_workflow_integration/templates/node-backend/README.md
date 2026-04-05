@@ -1,12 +1,20 @@
-# Node.js Express Backend Base w/ AI Overlays
+# Backend Express Template with AI Support
 
-## Core Features
-This backend logic matrix implements seamlessly explicit generative AI boundaries structurally optimizing strict functional performance constraints realistically:
-- **Copilot Server Assertions**: Prevents conversational agents from producing generic `eval()` payload vulnerabilities by mapping strict codebase syntax. 
-- **Standardized Pre-Commit Analysis**: Secures API structural bounds inherently limiting unverified code logic securely. 
-- **AI Code Review Automation**: Integrates precise GitHub workflow paths that automatically format and scan newly deployed JavaScript arrays organically.
+## Projects
+This repository contains two distinct templates:
+1. React Frontend Template (located in the `../react-app` directory)
+2. Node Backend Template (this document)
 
-## Architectural Deployment
-1. Scaffold locally safely via your package framework: `npm install`
-2. Define API routing appropriately inside your main `server.js` bounds.
-3. Rapidly launch your local automated development checks: `npm run dev`
+## Features
+- Pre-configured Copilot structural settings natively installed.
+- Backend API parameter formatting limits.
+- AI Code Review automation workflow strictly integrated.
+
+## AI Configuration Setup
+A concrete configuration file for AI is presented inside the companion `ai-config.json` file. It targets strict Express payload exclusion bounds protecting runtime loops:
+```json
+{
+  "github.copilot.enable": {"*": true, "javascript": true},
+  "files.exclude": {"node_modules/": true, "logs/": true}
+}
+```
