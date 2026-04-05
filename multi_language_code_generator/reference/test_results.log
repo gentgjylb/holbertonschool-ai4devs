@@ -1,0 +1,20 @@
+$ python3 -m unittest discover tests
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.003s
+
+OK
+
+Test Case Breakdown:
+- test_00.py (test_standard_logs_mixed_outcomes): PASS
+- test_01.py (test_empty_request_logs): PASS
+- test_02.py (test_dataset_100_percent_error_rate): PASS
+- test_03.py (test_dataset_with_malformed_entries): PASS
+- test_04.py (test_high_traffic_single_ip): PASS
+- test_05.py (test_all_malformed_entries): PASS
+- test_06.py (test_single_successful_request): PASS
+- test_07.py (test_single_failed_request): PASS
+- test_08.py (test_arbitrary_whitespace): PASS
+- test_09.py (test_two_entries_different_visitors_both_fail): PASS
+
+All tests pass perfectly for the Reference Implementation of the Log Analyzer.
