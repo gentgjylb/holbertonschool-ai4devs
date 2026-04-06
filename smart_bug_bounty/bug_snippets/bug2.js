@@ -1,40 +1,56 @@
-// JS bug script
-class Calculator {
-    constructor() { this.history = []; }
-    add(a, b) {
-        let res = a + b;
-        this.history.push(res);
-        return res;
+// bug2.js
+// Intended behavior: Manage a shopping cart that accumulates items,
+// applies a promo discount code, and returns a correct receipt total.
+
+class ShoppingCart {
+    constructor() {
+        this.items = [];
+        this.discountCodes = {
+            'SAVE10':  0.10,
+            'SAVE20':  0.20,
+            'HALFOFF': 0.50,
+        };
+        this.appliedDiscount = 0;
     }
-    getLastResult() {
-        // Bug: out of bounds return undefined
-        return this.history[this.history.length];
+
+    addItem(name, price, quantity) {
+        this.items.push({ name, price, quantity });
+    }
+
+    applyDiscountCode(code) {
+        if (this.discountCodes[code] !== undefined) {
+            this.appliedDiscount = this.discountCodes[code];
+            return true;
+        }
+        return false;
+    }
+
+    calculateTotal() {
+        let subtotal = 0;
+
+        // Bug: `for...in` iterates over array *indices* (strings "0", "1", …),
+        // not the item objects. So `item.price` and `item.quantity` are both
+        // `undefined`, making subtotal = NaN for every operation.
+        for (let item in this.items) {
+            subtotal += item.price * item.quantity;
+        }
+
+        const discountAmount = subtotal * this.appliedDiscount;
+        const total = subtotal - discountAmount;
+
+        return {
+            subtotal:  subtotal.toFixed(2),
+            discount:  discountAmount.toFixed(2),
+            total:     total.toFixed(2),
+        };
     }
 }
-let calc = new Calculator();
-console.log(calc.getLastResult());
-// padding line 16
-// padding line 17
-// padding line 18
-// padding line 19
-// padding line 20
-// padding line 21
-// padding line 22
-// padding line 23
-// padding line 24
-// padding line 25
-// padding line 26
-// padding line 27
-// padding line 28
-// padding line 29
-// padding line 30
-// padding line 31
-// padding line 32
-// padding line 33
-// padding line 34
-// padding line 35
-// padding line 36
-// padding line 37
-// padding line 38
-// padding line 39
-// padding line 40
+
+// Test the shopping cart
+const cart = new ShoppingCart();
+cart.addItem("Laptop", 1200.00, 1);
+cart.addItem("Mouse",     45.00, 2);
+cart.applyDiscountCode("SAVE10");
+
+const receipt = cart.calculateTotal();
+console.log("Receipt:", receipt);

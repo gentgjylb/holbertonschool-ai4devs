@@ -1,40 +1,56 @@
-// Go bug script
+// bug6.go
+// Intended behavior: Simulate a bank account that receives many concurrent
+// deposits from multiple goroutines and finishes with the correct total
+// balance (numGoroutines * depositAmount).
+
 package main
-import "fmt"
-type Multiplier struct {
-	history []int
+
+import (
+	"fmt"
+	"sync"
+)
+
+// BankAccount holds an owner name and a running balance.
+// Bug: There is no sync.Mutex protecting the `balance` field.
+// Concurrent goroutines perform un-synchronized read-modify-write
+// operations (`a.balance += amount`), causing a data race whose result
+// is unpredictable — the final balance will typically be less than expected.
+type BankAccount struct {
+	name    string
+	balance int
 }
-func (m *Multiplier) divide(a int, b int) int {
-	// Bug: integer division by zero panic
-	res := a / b
-	m.history = append(m.history, res)
-	return res
+
+// Deposit adds amount to the balance (NOT thread-safe as written).
+func (a *BankAccount) Deposit(amount int) {
+	a.balance += amount
 }
+
+// GetBalance returns the current balance.
+func (a *BankAccount) GetBalance() int {
+	return a.balance
+}
+
+// simulateDeposits fires numDeposits goroutines, each depositing amount.
+func simulateDeposits(account *BankAccount, numDeposits, amount int) {
+	var wg sync.WaitGroup
+	for i := 0; i < numDeposits; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			account.Deposit(amount)
+		}()
+	}
+	wg.Wait()
+}
+
 func main() {
-	calc := Multiplier{}
-	calc.divide(5, 0)
+	account := &BankAccount{name: "Corporate Reserves", balance: 0}
+
+	const numDeposits  = 1000
+	const depositAmount = 10
+
+	fmt.Printf("Starting balance for %s: $%d\n", account.name, account.GetBalance())
+	simulateDeposits(account, numDeposits, depositAmount)
+	fmt.Printf("Final balance   for %s: $%d  (expected $%d)\n",
+		account.name, account.GetBalance(), numDeposits*depositAmount)
 }
-// padding line 17
-// padding line 18
-// padding line 19
-// padding line 20
-// padding line 21
-// padding line 22
-// padding line 23
-// padding line 24
-// padding line 25
-// padding line 26
-// padding line 27
-// padding line 28
-// padding line 29
-// padding line 30
-// padding line 31
-// padding line 32
-// padding line 33
-// padding line 34
-// padding line 35
-// padding line 36
-// padding line 37
-// padding line 38
-// padding line 39
-// padding line 40

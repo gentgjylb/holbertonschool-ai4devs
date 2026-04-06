@@ -1,40 +1,64 @@
-// Java bug script
+// bug3.java
+// Intended behavior: Manage a list of students, support adding/removing
+// them by name, and calculate the average GPA of enrolled students.
+
 import java.util.ArrayList;
 import java.util.List;
+
 public class bug3 {
-    private List<Integer> history = new ArrayList<>();
-    public int add(int a, int b) {
-        int res = a + b;
-        history.add(res);
-        return res;
+
+    private List<Student> students;
+
+    public bug3() {
+        this.students = new ArrayList<>();
     }
-    public int getLastResult() {
-        // Bug: index out of bounds
-        return history.get(history.size());
+
+    public void addStudent(String name, double gpa) {
+        students.add(new Student(name, gpa));
     }
+
+    public void removeStudent(String name) {
+        // Bug: Modifying the list while iterating with a for-each loop
+        // throws ConcurrentModificationException at runtime.
+        for (Student s : students) {
+            if (s.getName().equals(name)) {
+                students.remove(s);
+            }
+        }
+    }
+
+    public double calculateAverageGPA() {
+        if (students.isEmpty()) {
+            return 0.0;
+        }
+        double total = 0.0;
+        for (Student s : students) {
+            total += s.getGpa();
+        }
+        return total / students.size();
+    }
+
     public static void main(String[] args) {
-        bug3 calc = new bug3();
-        System.out.println(calc.getLastResult());
+        bug3 manager = new bug3();
+        manager.addStudent("Alice",   3.8);
+        manager.addStudent("Bob",     3.2);
+        manager.addStudent("Charlie", 3.5);
+
+        System.out.println("Average GPA: " + manager.calculateAverageGPA());
+        manager.removeStudent("Bob");
+        System.out.println("Average GPA after removal: " + manager.calculateAverageGPA());
     }
 }
-// padding line 20
-// padding line 21
-// padding line 22
-// padding line 23
-// padding line 24
-// padding line 25
-// padding line 26
-// padding line 27
-// padding line 28
-// padding line 29
-// padding line 30
-// padding line 31
-// padding line 32
-// padding line 33
-// padding line 34
-// padding line 35
-// padding line 36
-// padding line 37
-// padding line 38
-// padding line 39
-// padding line 40
+
+class Student {
+    private String name;
+    private double gpa;
+
+    public Student(String name, double gpa) {
+        this.name = name;
+        this.gpa  = gpa;
+    }
+
+    public String getName() { return name; }
+    public double getGpa()  { return gpa;  }
+}
