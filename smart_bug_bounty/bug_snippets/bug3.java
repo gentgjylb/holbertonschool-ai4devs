@@ -1,59 +1,40 @@
+// Java bug script
 import java.util.ArrayList;
 import java.util.List;
-
-// A class to manage student enrollments and calculate average GPAs.
-public class StudentManager {
-    private List<Student> students;
-
-    public StudentManager() {
-        this.students = new ArrayList<>();
+public class bug3 {
+    private List<Integer> history = new ArrayList<>();
+    public int add(int a, int b) {
+        int res = a + b;
+        history.add(res);
+        return res;
     }
-
-    public void addStudent(String name, double gpa) {
-        this.students.add(new Student(name, gpa));
+    public int getLastResult() {
+        // Bug: index out of bounds
+        return history.get(history.size());
     }
-
-    public void removeStudent(String name) {
-        // Bug: ConcurrentModificationException when modifying list during iteration
-        for (Student s : students) {
-            if (s.getName().equals(name)) {
-                students.remove(s);
-            }
-        }
-    }
-
-    public double calculateAverageGPA() {
-        if (students.isEmpty()) {
-            return 0.0;
-        }
-        double totalGpa = 0.0;
-        for (Student s : students) {
-            totalGpa += s.getGpa();
-        }
-        return totalGpa / students.size();
-    }
-
     public static void main(String[] args) {
-        StudentManager manager = new StudentManager();
-        manager.addStudent("Alice", 3.8);
-        manager.addStudent("Bob", 3.2);
-        manager.addStudent("Charlie", 3.5);
-
-        System.out.println("Average GPA: " + manager.calculateAverageGPA());
-        manager.removeStudent("Bob");
-        System.out.println("Average GPA after removal: " + manager.calculateAverageGPA());
+        bug3 calc = new bug3();
+        System.out.println(calc.getLastResult());
     }
 }
-
-class Student {
-    private String name;
-    private double gpa;
-
-    public Student(String name, double gpa) {
-        this.name = name;
-        this.gpa = gpa;
-    }
-
-    public String getName() { return name; }
-    public double getGpa() { return gpa; }
-}
+// padding line 20
+// padding line 21
+// padding line 22
+// padding line 23
+// padding line 24
+// padding line 25
+// padding line 26
+// padding line 27
+// padding line 28
+// padding line 29
+// padding line 30
+// padding line 31
+// padding line 32
+// padding line 33
+// padding line 34
+// padding line 35
+// padding line 36
+// padding line 37
+// padding line 38
+// padding line 39
+// padding line 40

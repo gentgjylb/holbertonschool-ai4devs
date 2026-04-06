@@ -1,55 +1,40 @@
-# A simple configuration manager that merges default configurations
-# with user-provided configurations.
-
-class ConfigManager:
+# Python bug script 2
+class Multiplier:
     def __init__(self):
-        # Default configuration settings
-        self.default_config = {
-            "host": "localhost",
-            "port": 8080,
-            "debug": False,
-            "allowed_origins": ["http://localhost:3000"]
-        }
-        self.current_config = self.default_config
-
-    def update_config(self, user_config):
-        """
-        Updates the current configuration with user specifics.
-        """
-        # Bug: Modifying self.current_config directly modifies self.default_config
-        # because they reference the same dictionary object.
-        for key, value in user_config.items():
-            if isinstance(value, list) and key in self.current_config:
-                # Append to existing list
-                self.current_config[key].extend(value)
-            else:
-                self.current_config[key] = value
-
-    def get_config(self):
-        return self.current_config
-
-    def reset_config(self):
-        """
-        Resets configuration to the defaults.
-        """
-        # Because of the bug above, default_config is also mutated
-        self.current_config = self.default_config
-
-def main():
-    manager = ConfigManager()
-    
-    user_settings = {
-        "port": 9090,
-        "debug": True,
-        "allowed_origins": ["https://myapp.com"]
-    }
-    
-    manager.update_config(user_settings)
-    print("Updated Config:", manager.get_config())
-    
-    # Try to reset
-    manager.reset_config()
-    print("Reset Config:", manager.get_config())
-
-if __name__ == "__main__":
-    main()
+        self.history = []
+    def divide(self, a, b):
+        # Bug: Zero division error not handled
+        res = a / b
+        self.history.append(res)
+        return res
+calc = Multiplier()
+calc.divide(5, 0)
+# padding line 12
+# padding line 13
+# padding line 14
+# padding line 15
+# padding line 16
+# padding line 17
+# padding line 18
+# padding line 19
+# padding line 20
+# padding line 21
+# padding line 22
+# padding line 23
+# padding line 24
+# padding line 25
+# padding line 26
+# padding line 27
+# padding line 28
+# padding line 29
+# padding line 30
+# padding line 31
+# padding line 32
+# padding line 33
+# padding line 34
+# padding line 35
+# padding line 36
+# padding line 37
+# padding line 38
+# padding line 39
+# padding line 40
