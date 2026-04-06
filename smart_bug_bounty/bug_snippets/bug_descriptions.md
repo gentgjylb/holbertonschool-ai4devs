@@ -20,6 +20,6 @@
 - **Intended Behavior**: Fetch user data from an API and return the user's name in uppercase.
 - **Current Issue**: `await` is used inside a regular (non-async) function, causing a SyntaxError. The function declaration is missing the `async` keyword.
 
-## bug6.go
-- **Intended Behavior**: Compute the factorial of a non-negative integer and return the correct result.
-- **Current Issue**: Integer overflow — the accumulator is declared as `int32`, which overflows for inputs >= 13. Should use `int64` or `big.Int`.
+## bug6.cpp
+- **Intended Behavior**: Reverse an array of integers in place.
+- **Current Issue**: Array index out of bounds — `right` is initialized to `size` instead of `size - 1`, causing the first swap to access `arr[size]` which is past the end of the array, leading to undefined behavior.
