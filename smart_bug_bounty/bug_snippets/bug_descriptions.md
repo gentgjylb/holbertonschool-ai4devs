@@ -1,32 +1,25 @@
 # Bug Descriptions
 
 ## bug1.py
-- **Language**: Python
-- **Intended Behavior**: Process a list of sales transaction records, aggregate total sales per salesperson by accumulating all their individual amounts, and return exactly the top `N` salespeople sorted by descending total sales.
-- **Current Issue (Bug 1 — wrong assignment operator)**: Inside `process_data()`, the line `self.sales_by_person[name] = amount` uses `=` instead of `+=`. This means every new transaction for the same person overwrites the previous total instead of adding to it. Only the last transaction amount is kept.
-- **Current Issue (Bug 2 — off-by-one in slice)**: Inside `get_top_n_salespeople()`, the slice `sorted_sales[0:n+1]` returns `n+1` results instead of the requested `n`, causing one extra salesperson to always appear in the output.
+- **Intended Behavior**: Process a list of sales transactions, aggregate total sales per salesperson by accumulating all their amounts, and return exactly the top N salespeople sorted by descending total.
+- **Current Issue**: Two bugs are present. First, `self.sales_by_person[name] = amount` uses `=` instead of `+=`, overwriting previous sales instead of accumulating them. Second, the slice `sorted_sales[0:n+1]` has an off-by-one error that returns `n+1` results instead of `n`.
 
 ## bug2.js
-- **Language**: JavaScript
-- **Intended Behavior**: Manage a shopping cart by adding items (name, price, quantity), optionally applying a promo discount code, and calculating the correct subtotal, discount amount, and final total — all formatted to two decimal places.
-- **Current Issue**: In `calculateTotal()`, the loop uses `for (let item in this.items)`. In JavaScript, `for...in` on an array iterates over the **index keys** (the strings `"0"`, `"1"`, etc.), not the element objects. Consequently `item.price` and `item.quantity` are both `undefined`, and every multiplication yields `NaN`, producing an entirely incorrect total.
+- **Intended Behavior**: Manage a shopping cart by adding items with a name, price, and quantity, optionally applying a promo discount code, then computing the correct subtotal, discount amount, and final total.
+- **Current Issue**: `calculateTotal()` uses `for (let item in this.items)` which iterates over array index strings (`"0"`, `"1"`, …) instead of the item objects. Both `item.price` and `item.quantity` are `undefined`, so every multiplication yields `NaN` and the total is incorrect.
 
 ## bug3.java
-- **Language**: Java
-- **Intended Behavior**: Maintain a list of enrolled students, allow removing a student by name, and compute the current average GPA of all remaining students.
-- **Current Issue**: In `removeStudent()`, the code calls `students.remove(s)` while actively iterating over `students` with a for-each loop. Java's `ArrayList` iterator detects structural modification during iteration and immediately throws a `ConcurrentModificationException`. The fix is to use `Iterator.remove()` or `students.removeIf(s -> s.getName().equals(name))`.
+- **Intended Behavior**: Maintain a list of enrolled students, support removing a student by name, and compute the current average GPA across all remaining students.
+- **Current Issue**: `removeStudent()` calls `students.remove(s)` while iterating over the same list with a for-each loop. Java's iterator detects the structural modification and throws `ConcurrentModificationException` at runtime.
 
 ## bug4.py
-- **Language**: Python
-- **Intended Behavior**: A `ConfigManager` that holds immutable factory defaults, allows user overrides to be layered on top at runtime, and can reset the active configuration back to the original defaults at any time.
-- **Current Issue**: In `__init__()`, `self.current_config = self.default_config` does **not** copy the dictionary — both attributes point to the exact same object in memory. Any mutation to `self.current_config` (including list `.extend()` calls) silently mutates `self.default_config` as well. When `reset_config()` reassigns `self.current_config = self.default_config`, the "defaults" object is already corrupted, so the reset has no effect.
+- **Intended Behavior**: A configuration manager that stores immutable factory defaults, allows user overrides to be merged in at runtime, and can reset the active configuration back to the original defaults at any time.
+- **Current Issue**: `self.current_config = self.default_config` creates a reference alias, not a copy. Both variables point to the same dictionary object, so any mutation through `current_config` permanently corrupts `default_config` as well, making `reset_config()` ineffective.
 
 ## bug5.js
-- **Language**: JavaScript
-- **Intended Behavior**: Schedule named callbacks to run after a specified delay. Upon execution each callback should be removed from the pending-tasks list and the completed-tasks counter should be incremented, so `getStatus()` always returns accurate pending/completed counts.
-- **Current Issue**: The `setTimeout` callback is a regular `function` expression, which does **not** inherit `this` from the enclosing `TaskScheduler` instance. At the time the callback fires, `this` is `undefined` (strict mode) or the global object, making `this.tasks.indexOf(taskName)` throw a `TypeError`. Fix by using an arrow function `() => { … }` or by capturing the context with `.bind(this)`.
+- **Intended Behavior**: Schedule named callbacks to fire after a specified delay. After each callback executes, its task should be removed from the pending list and the completed counter should be incremented so `getStatus()` always reflects accurate counts.
+- **Current Issue**: The `setTimeout` callback uses a regular `function` expression which does not inherit `this` from the enclosing `TaskScheduler` instance. When the callback fires, `this` is `undefined` (strict mode) or the global object, causing `this.tasks.indexOf()` to throw a `TypeError`.
 
 ## bug6.go
-- **Language**: Go
-- **Intended Behavior**: A `BankAccount` struct that safely receives many concurrent deposits from multiple goroutines and ends with a balance that is exactly `numDeposits × depositAmount`.
-- **Current Issue**: `BankAccount` has no `sync.Mutex` (or other synchronization primitive). The `Deposit` method performs a non-atomic read-modify-write on `a.balance` (`a.balance += amount`). When thousands of goroutines execute this simultaneously, multiple goroutines read the same stale value, increment it, and write back — overwriting each other's work. The final balance is unpredictable and almost always less than expected (detectable with `go run -race`).
+- **Intended Behavior**: A `BankAccount` struct that safely accepts many concurrent deposits from multiple goroutines, finishing with a final balance equal to `numDeposits × depositAmount`.
+- **Current Issue**: `BankAccount` has no `sync.Mutex`. The `Deposit` method performs a non-atomic read-modify-write on `a.balance`. When many goroutines run concurrently, they overwrite each other's updates, leading to a data race and an unpredictably low final balance (detectable with `go run -race`).
