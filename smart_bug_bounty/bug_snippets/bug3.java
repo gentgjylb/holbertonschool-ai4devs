@@ -1,64 +1,41 @@
-// bug3.java
-// Intended behavior: Manage a list of students, support adding/removing
-// them by name, and calculate the average GPA of enrolled students.
-
-import java.util.ArrayList;
-import java.util.List;
-
+// bug3.java – StudentManager with ConcurrentModificationException
+import java.util.ArrayList; import java.util.List;
+class Student {
+    private String name; private double gpa;
+    public Student(String n, double g) { name = n; gpa = g; }
+    public String getName() { return name; }
+    public double getGpa()  { return gpa; }
+}
 public class bug3 {
-
-    private List<Student> students;
-
-    public bug3() {
-        this.students = new ArrayList<>();
-    }
+    private List<Student> students = new ArrayList<>();
 
     public void addStudent(String name, double gpa) {
         students.add(new Student(name, gpa));
     }
-
+    // Intended: remove a student by name from the enrolled list.
     public void removeStudent(String name) {
-        // Bug: Modifying the list while iterating with a for-each loop
-        // throws ConcurrentModificationException at runtime.
+        // Bug: calling students.remove() inside a for-each loop on the
+        // same list throws ConcurrentModificationException at runtime.
         for (Student s : students) {
             if (s.getName().equals(name)) {
-                students.remove(s);
+                students.remove(s);  // illegal structural modification
             }
         }
     }
-
+    // Intended: return the average GPA of all enrolled students.
     public double calculateAverageGPA() {
-        if (students.isEmpty()) {
-            return 0.0;
-        }
+        if (students.isEmpty()) return 0.0;
         double total = 0.0;
-        for (Student s : students) {
-            total += s.getGpa();
-        }
+        for (Student s : students) total += s.getGpa();
         return total / students.size();
     }
-
     public static void main(String[] args) {
-        bug3 manager = new bug3();
-        manager.addStudent("Alice",   3.8);
-        manager.addStudent("Bob",     3.2);
-        manager.addStudent("Charlie", 3.5);
-
-        System.out.println("Average GPA: " + manager.calculateAverageGPA());
-        manager.removeStudent("Bob");
-        System.out.println("Average GPA after removal: " + manager.calculateAverageGPA());
+        bug3 mgr = new bug3();
+        mgr.addStudent("Alice", 3.8);
+        mgr.addStudent("Bob", 3.2);
+        mgr.addStudent("Charlie", 3.5);
+        System.out.println("Avg: " + mgr.calculateAverageGPA());
+        mgr.removeStudent("Bob");
+        System.out.println("After removal: " + mgr.calculateAverageGPA());
     }
-}
-
-class Student {
-    private String name;
-    private double gpa;
-
-    public Student(String name, double gpa) {
-        this.name = name;
-        this.gpa  = gpa;
-    }
-
-    public String getName() { return name; }
-    public double getGpa()  { return gpa;  }
 }

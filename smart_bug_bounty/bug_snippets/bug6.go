@@ -1,8 +1,4 @@
-// bug6.go
-// Intended behavior: Simulate a bank account that receives many concurrent
-// deposits from multiple goroutines and finishes with the correct total
-// balance (numGoroutines * depositAmount).
-
+// bug6.go – BankAccount with data race (missing sync.Mutex)
 package main
 
 import (
@@ -10,47 +6,37 @@ import (
 	"sync"
 )
 
-// BankAccount holds an owner name and a running balance.
-// Bug: There is no sync.Mutex protecting the `balance` field.
-// Concurrent goroutines perform un-synchronized read-modify-write
-// operations (`a.balance += amount`), causing a data race whose result
-// is unpredictable — the final balance will typically be less than expected.
+// Bug: no sync.Mutex guards the balance field. Concurrent goroutines
+// perform un-synchronized read-modify-write on a.balance, causing a
+// data race; the final balance is unpredictable (detectable with -race).
 type BankAccount struct {
 	name    string
 	balance int
 }
 
-// Deposit adds amount to the balance (NOT thread-safe as written).
 func (a *BankAccount) Deposit(amount int) {
-	a.balance += amount
+	a.balance += amount // not thread-safe
 }
 
-// GetBalance returns the current balance.
 func (a *BankAccount) GetBalance() int {
 	return a.balance
 }
 
-// simulateDeposits fires numDeposits goroutines, each depositing amount.
-func simulateDeposits(account *BankAccount, numDeposits, amount int) {
+func simulateDeposits(acct *BankAccount, n, amount int) {
 	var wg sync.WaitGroup
-	for i := 0; i < numDeposits; i++ {
+	for i := 0; i < n; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			account.Deposit(amount)
+			acct.Deposit(amount)
 		}()
 	}
 	wg.Wait()
 }
 
 func main() {
-	account := &BankAccount{name: "Corporate Reserves", balance: 0}
-
-	const numDeposits  = 1000
-	const depositAmount = 10
-
-	fmt.Printf("Starting balance for %s: $%d\n", account.name, account.GetBalance())
-	simulateDeposits(account, numDeposits, depositAmount)
-	fmt.Printf("Final balance   for %s: $%d  (expected $%d)\n",
-		account.name, account.GetBalance(), numDeposits*depositAmount)
+	acc := &BankAccount{name: "Reserves", balance: 0}
+	fmt.Printf("Start:    $%d\n", acc.GetBalance())
+	simulateDeposits(acc, 1000, 10)
+	fmt.Printf("Expected: $%d  Got: $%d\n", 10000, acc.GetBalance())
 }
