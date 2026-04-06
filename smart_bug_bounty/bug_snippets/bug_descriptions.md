@@ -1,25 +1,47 @@
 # Bug Descriptions
 
 ## bug1.py
-- **Intended Behavior**: Process a list of sales transactions, aggregate total sales per salesperson by accumulating all their amounts, and return exactly the top N salespeople sorted by descending total.
-- **Current Issue**: Two bugs are present. First, `self.sales_by_person[name] = amount` uses `=` instead of `+=`, overwriting previous sales instead of accumulating them. Second, the slice `sorted_sales[0:n+1]` has an off-by-one error that returns `n+1` results instead of `n`.
+- **Language**: Python
+- **Intended Behavior**: Return the last `n` items in a list.
+- **Current Issue**: Off-by-one error due to incorrect slicing. `start` is computed as `len(items) - n - 1` instead of `len(items) - n`, so the function returns `n + 1` items instead of `n`.
+- **Example**: `last_n([1, 2, 3, 4, 5], 2)` should return `[4, 5]` but returns `[3, 4, 5]`.
+
+---
 
 ## bug2.js
-- **Intended Behavior**: Manage a shopping cart by adding items with a name, price, and quantity, optionally applying a promo discount code, then computing the correct subtotal, discount amount, and final total.
-- **Current Issue**: `calculateTotal()` uses `for (let item in this.items)` which iterates over array index strings (`"0"`, `"1"`, …) instead of the item objects. Both `item.price` and `item.quantity` are `undefined`, so every multiplication yields `NaN` and the total is incorrect.
+- **Language**: JavaScript
+- **Intended Behavior**: Remove duplicate numbers from an array and return a sorted list of unique values in ascending order.
+- **Current Issue**: Logical error — the condition `result.includes(numbers[i])` is inverted. The function only pushes a number when it already exists in `result`, so nothing ever gets added and the output is always an empty array `[]`.
+- **Example**: `dedupeAndSort([3, 1, 2, 3, 2, 4, 1])` should return `[1, 2, 3, 4]` but returns `[]`.
+
+---
 
 ## bug3.java
-- **Intended Behavior**: Maintain a list of enrolled students, support removing a student by name, and compute the current average GPA across all remaining students.
-- **Current Issue**: `removeStudent()` calls `students.remove(s)` while iterating over the same list with a for-each loop. Java's iterator detects the structural modification and throws `ConcurrentModificationException` at runtime.
+- **Language**: Java
+- **Intended Behavior**: Calculate the average character length of non-null strings in a list, silently ignoring any `null` entries.
+- **Current Issue**: No null check before calling `str.length()`. When the list contains `null` values, the program throws a `NullPointerException` at runtime instead of gracefully skipping those entries.
+- **Example**: `averageLength(Arrays.asList("hi", null, "world"))` should return `3.5` but throws `NullPointerException`.
+
+---
 
 ## bug4.py
-- **Intended Behavior**: A configuration manager that stores immutable factory defaults, allows user overrides to be merged in at runtime, and can reset the active configuration back to the original defaults at any time.
-- **Current Issue**: `self.current_config = self.default_config` creates a reference alias, not a copy. Both variables point to the same dictionary object, so any mutation through `current_config` permanently corrupts `default_config` as well, making `reset_config()` ineffective.
+- **Language**: Python
+- **Intended Behavior**: Sum all values in a dictionary where values are numbers stored as strings, and return the total as an integer.
+- **Current Issue**: Data type misuse — `total` is initialized as an empty string `""` instead of `0`, so `+=` performs string concatenation rather than numeric addition.
+- **Example**: `sum_string_values({"apples": "10", "oranges": "5", "pears": "2"})` should return `17` but returns `"1052"`.
+
+---
 
 ## bug5.js
-- **Intended Behavior**: Schedule named callbacks to fire after a specified delay. After each callback executes, its task should be removed from the pending list and the completed counter should be incremented so `getStatus()` always reflects accurate counts.
-- **Current Issue**: The `setTimeout` callback uses a regular `function` expression which does not inherit `this` from the enclosing `TaskScheduler` instance. When the callback fires, `this` is `undefined` (strict mode) or the global object, causing `this.tasks.indexOf()` to throw a `TypeError`.
+- **Language**: JavaScript
+- **Intended Behavior**: Asynchronously fetch user data from an API endpoint and return the user's `name` field converted to uppercase. The function should return a `Promise<string>` so callers can `await` the result.
+- **Current Issue**: Syntax error — `await` is used inside a regular (non-`async`) function. This causes a `SyntaxError` at parse time, preventing the script from running at all. The function declaration is missing the `async` keyword.
+- **Example**: `fetchUserNameUpper(42)` should resolve to `"ALICE"` but throws `SyntaxError: await is only valid in async functions`.
+
+---
 
 ## bug6.go
-- **Intended Behavior**: A `BankAccount` struct that safely accepts many concurrent deposits from multiple goroutines, finishing with a final balance equal to `numDeposits × depositAmount`.
-- **Current Issue**: `BankAccount` has no `sync.Mutex`. The `Deposit` method performs a non-atomic read-modify-write on `a.balance`. When many goroutines run concurrently, they overwrite each other's updates, leading to a data race and an unpredictably low final balance (detectable with `go run -race`).
+- **Language**: Go
+- **Intended Behavior**: Compute the factorial of a non-negative integer `n` and return the result.
+- **Current Issue**: Integer overflow — the accumulator `result` is declared as `int32`, which has a maximum value of `2,147,483,647`. Factorials grow rapidly: `13! = 6,227,020,800`, which exceeds `int32` range, causing the result to silently wrap around to a wrong (negative) value. The function should use `int64` or `*big.Int` to handle larger inputs correctly.
+- **Example**: `factorial(13)` should return `6227020800` but returns `-2147483648` (overflow).

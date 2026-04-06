@@ -1,40 +1,29 @@
-// bug6.go – BankAccount with data race (missing sync.Mutex)
+// Bug 6 - Integer overflow in factorial
+// Intended behavior: compute the factorial of n and return it.
+// Issue: uses int32 which overflows for n >= 13; should use int64 or big.Int.
+
 package main
-import (
-	"fmt"
-	"sync"
-)
-// Bug: no sync.Mutex guards the balance field. Concurrent goroutines
-// perform un-synchronized read-modify-write on a.balance, causing a
-// data race; the final balance is unpredictable (detectable with -race).
-type BankAccount struct {
-	name    string
-	balance int
-}
 
-func (a *BankAccount) Deposit(amount int) {
-	a.balance += amount // not thread-safe
-}
+import "fmt"
 
-func (a *BankAccount) GetBalance() int {
-	return a.balance
-}
-
-func simulateDeposits(acct *BankAccount, n, amount int) {
-	var wg sync.WaitGroup
-	for i := 0; i < n; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			acct.Deposit(amount)
-		}()
+func factorial(n int) int32 {
+	if n < 0 {
+		return -1 // sentinel for invalid input
 	}
-	wg.Wait()
+	if n == 0 {
+		return 1
+	}
+
+	var result int32 = 1 // BUG: int32 overflows for n >= 13
+	for i := 1; i <= n; i++ {
+		result *= int32(i)
+	}
+	return result
 }
 
 func main() {
-	acc := &BankAccount{name: "Reserves", balance: 0}
-	fmt.Printf("Start:    $%d\n", acc.GetBalance())
-	simulateDeposits(acc, 1000, 10)
-	fmt.Printf("Expected: $%d  Got: $%d\n", 10000, acc.GetBalance())
+	for _, v := range []int{5, 10, 13, 20} {
+		// 13! = 6227020800, which exceeds int32 max (2147483647)
+		fmt.Printf("factorial(%d) = %d\n", v, factorial(v))
+	}
 }

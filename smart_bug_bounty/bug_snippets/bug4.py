@@ -1,40 +1,21 @@
-# bug4.py – ConfigManager with shallow-copy/mutated-defaults bug
-class ConfigManager:
-    def __init__(self):
-        self.default_config = {
-            "host": "localhost",
-            "port": 8080,
-            "debug": False,
-            "allowed_origins": ["http://localhost:3000"],
-        }
-        # Bug: assignment, not a copy – both names point to the same dict.
-        self.current_config = self.default_config
+"""Bug 4 - Data type misuse
 
-    def update_config(self, user_config):
-        for key, value in user_config.items():
-            if isinstance(value, list) and key in self.current_config:
-                # Also mutates default_config["allowed_origins"] in-place
-                self.current_config[key].extend(value)
-            else:
-                self.current_config[key] = value
+Intended behavior: sum values in a dict where values are numeric strings.
+Issue: uses string concatenation instead of numeric addition.
+"""
 
-    def get_config(self):
-        return self.current_config
+from typing import Dict
 
-    def reset_config(self):
-        # default_config was already mutated; reset has no real effect.
-        self.current_config = self.default_config
 
-def main():
-    manager = ConfigManager()
-    user_settings = {
-        "port": 9090,
-        "debug": True,
-        "allowed_origins": ["https://myapp.com"],
-    }
-    manager.update_config(user_settings)
-    print("Updated:", manager.get_config())
-    manager.reset_config()
-    print("Reset:  ", manager.get_config())  # still shows mutated values
+def sum_string_values(values: Dict[str, str]) -> int:
+    total = ""  # BUG: should start at 0
+
+    for key, value in values.items():
+        total += value  # BUG: concatenates strings instead of adding integers
+
+    return total  # BUG: returns a string, not an int
+
+
 if __name__ == "__main__":
-    main()
+    d = {"apples": "10", "oranges": "5", "pears": "2"}
+    print(sum_string_values(d))  # expected 17 but returns "1052"

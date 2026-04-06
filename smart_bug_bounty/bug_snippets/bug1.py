@@ -1,40 +1,22 @@
-# bug1.py – SalesDataProcessor with two bugs
-class SalesDataProcessor:
-    def __init__(self, data):
-        self.data = data
-        self.sales_by_person = {}
+"""Bug 1 - Off-by-one slicing
 
-    def process_data(self):
-        for entry in self.data:
-            name = entry.get("name")
-            amount = entry.get("amount", 0)
-            # Bug 1: = instead of +=; overwrites instead of accumulating
-            if name in self.sales_by_person:
-                self.sales_by_person[name] = amount
-            else:
-                self.sales_by_person[name] = amount
+Intended behavior: return the last n items of a list.
+Issue: returns n+1 items when n < len(items).
+"""
 
-    def get_top_n_salespeople(self, n):
-        sorted_sales = sorted(
-            self.sales_by_person.items(),
-            key=lambda item: item[1],
-            reverse=True
-        )
-        # Bug 2: off-by-one – returns n+1 results instead of n
-        return sorted_sales[0:n + 1]
+from typing import List, TypeVar
 
-def main():
-    raw_data = [
-        {"name": "Alice", "amount": 150},
-        {"name": "Bob", "amount": 200},
-        {"name": "Alice", "amount": 300},
-        {"name": "Charlie", "amount": 50},
-        {"name": "Bob", "amount": 100},
-    ]
-    processor = SalesDataProcessor(raw_data)
-    processor.process_data()
-    top_2 = processor.get_top_n_salespeople(2)
-    print(f"Top 2 salespeople: {top_2}")
+T = TypeVar("T")
+
+
+def last_n(items: List[T], n: int) -> List[T]:
+    if n <= 0:
+        return []
+
+    start = len(items) - n - 1  # BUG: off-by-one; should be len(items) - n
+    return items[start:]
+
 
 if __name__ == "__main__":
-    main()
+    data = [1, 2, 3, 4, 5]
+    print(last_n(data, 2))  # expected [4, 5] but returns [3, 4, 5]
