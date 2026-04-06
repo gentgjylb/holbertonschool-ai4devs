@@ -8,7 +8,6 @@ class Student {
 }
 public class bug3 {
     private List<Student> students = new ArrayList<>();
-
     public void addStudent(String name, double gpa) {
         students.add(new Student(name, gpa));
     }

@@ -1,11 +1,9 @@
 // bug6.go – BankAccount with data race (missing sync.Mutex)
 package main
-
 import (
 	"fmt"
 	"sync"
 )
-
 // Bug: no sync.Mutex guards the balance field. Concurrent goroutines
 // perform un-synchronized read-modify-write on a.balance, causing a
 // data race; the final balance is unpredictable (detectable with -race).
