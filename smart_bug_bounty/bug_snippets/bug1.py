@@ -1,7 +1,7 @@
 def process_data_and_get_last_n(data_list, n):
     """
-    Processes a list of numbers by doubling them,
-    and returns the last n elements from the processed list.
+    Processes a list of numbers by doubling them.
+    Returns the last n elements from the processed list.
     """
     if not isinstance(data_list, list):
         raise ValueError("Input must be a list.")
@@ -14,19 +14,18 @@ def process_data_and_get_last_n(data_list, n):
     # Process data: double each number
     processed_list = []
     for item in data_list:
-        # Simulate some complex processing
         doubled = item * 2
         processed_list.append(doubled)
         
     print("Finished processing all items.")
     
-    # Return exactly the last n items
-    # BUG: If n is 0, processed_list[-0:] returns the whole list instead of an empty list
+    # BUG: If n is 0, processed_list[-0:] returns the whole list 
+    # instead of an empty list
     # The fix would be: return processed_list[-n:] if n > 0 else []
     
     length = len(processed_list)
     if n > length:
-        print(f"Warning: requested {n} items, but only {length} available.")
+        print(f"Warning: requested {n} items, only {length} available.")
         return processed_list
         
     # Potential off-by-one or unexpected behavior when n=0
@@ -34,7 +33,8 @@ def process_data_and_get_last_n(data_list, n):
     
     return result
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     test_data = [1, 2, 3, 4, 5]
     print("Testing with n=2:", process_data_and_get_last_n(test_data, 2))
-    print("Testing with n=0:", process_data_and_get_last_n(test_data, 0)) # Will fail by returning whole list
+    print("Testing with n=0:", process_data_and_get_last_n(test_data, 0))
+
