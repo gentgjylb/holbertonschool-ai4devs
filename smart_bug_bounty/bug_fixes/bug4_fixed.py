@@ -35,3 +35,6 @@ if __name__ == '__main__':
           "u2": {"status": "active"},
           "u3": {"email": "b@x.com", "status": "inactive"}}
     print("Cleaned DB:", filter_invalid_users(db))
+
+
+

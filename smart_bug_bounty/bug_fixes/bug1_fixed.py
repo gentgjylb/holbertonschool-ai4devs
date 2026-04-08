@@ -11,7 +11,6 @@ def process_data_and_get_last_n(data_list, n):
         
     print(f"Starting processing for list of size {len(data_list)}.")
     
-    # Process data: double each number
     processed_list = []
     for item in data_list:
         doubled = item * 2
@@ -33,3 +32,9 @@ if __name__ == '__main__':
     test_data = [1, 2, 3, 4, 5]
     print("Testing with n=2:", process_data_and_get_last_n(test_data, 2))
     print("Testing with n=0:", process_data_and_get_last_n(test_data, 0))
+
+
+
+
+
+
