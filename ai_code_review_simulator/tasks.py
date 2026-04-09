@@ -1,6 +1,13 @@
 import uuid
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from typing import List, Optional, Dict, Any, Set
+from enum import Enum
+
+class SortAttribute(Enum):
+    DUE_DATE = "due_date"
+    CREATED_AT = "created_at"
+    TITLE = "title"
+    STATUS = "status"
 
 class Task:
     """Represents a single task in the system."""
@@ -14,7 +21,7 @@ class Task:
         self.description = description
         self.status = "pending"
         self.due_date = due_date
-        self.created_at = datetime.now()
+        self.created_at = datetime.now(timezone.utc)
         self.tags: Set[str] = set()
         
     def mark_completed(self) -> None:
@@ -30,7 +37,7 @@ class Task:
         self.due_date = new_due_date
         
     def add_tag(self, tag: str) -> None:
-        """Adds a tag to the task."""
+        """Adds a tag to the task. Tags are automatically formatted to lowercase."""
         if tag:
             self.tags.add(tag.lower())
             
@@ -82,7 +89,7 @@ class TaskManager:
         """Returns a copy of all tasks."""
         return list(self.tasks)
 
-    # NEW FEATURE: Task filtering
+    # REFACTORED FEATURE: Task filtering (O(N) single pass)
     def filter_tasks(self, 
                     status: Optional[str] = None, 
                     due_date: Optional[date] = None, 
@@ -93,52 +100,57 @@ class TaskManager:
         Filters tasks based on various criteria.
         This provides a highly flexible way to search and organize tasks.
         """
-        filtered = self.tasks
+        filtered = []
+        tag_lower = tag.lower() if tag else None
+        kw = keyword.lower() if keyword else None
+        today = date.today()
         
-        if status:
-            filtered = [t for t in filtered if t.status == status]
+        for t in self.tasks:
+            if status and t.status != status:
+                continue
+            if due_date and t.due_date != due_date:
+                continue
+            if tag_lower and tag_lower not in t.tags:
+                continue
+            if kw and kw not in t.title.lower() and kw not in t.description.lower():
+                continue
+            if overdue and not (t.due_date and t.due_date < today and t.status != "completed"):
+                continue
             
-        if due_date:
-            filtered = [t for t in filtered if t.due_date == due_date]
-            
-        if tag:
-            tag_lower = tag.lower()
-            filtered = [t for t in filtered if tag_lower in t.tags]
-            
-        if keyword:
-            kw = keyword.lower()
-            filtered = [t for t in filtered if kw in t.title.lower() or kw in t.description.lower()]
-            
-        if overdue:
-            today = date.today()
-            filtered = [
-                t for t in filtered 
-                if t.due_date and t.due_date < today and t.status != "completed"
-            ]
+            filtered.append(t)
             
         return filtered
         
-    def sort_tasks(self, by: str = "due_date", reverse: bool = False) -> List[Task]:
-        """Sorts tasks depending on specified attribute."""
-        if by == "due_date":
-            # Handle None due dates by placing them at the end
+    def sort_tasks(self, by: SortAttribute = SortAttribute.DUE_DATE, reverse: bool = False) -> List[Task]:
+        """Sorts tasks depending on specified attribute using Enum logic."""
+        if by == SortAttribute.DUE_DATE:
             max_date = date.max
             return sorted(self.tasks, key=lambda t: t.due_date or max_date, reverse=reverse)
-        elif by == "created_at":
+        elif by == SortAttribute.CREATED_AT:
             return sorted(self.tasks, key=lambda t: t.created_at, reverse=reverse)
-        elif by == "title":
+        elif by == SortAttribute.TITLE:
             return sorted(self.tasks, key=lambda t: t.title.lower(), reverse=reverse)
-        elif by == "status":
+        elif by == SortAttribute.STATUS:
             return sorted(self.tasks, key=lambda t: t.status, reverse=reverse)
         else:
             raise ValueError(f"Unsupported sort attribute: {by}")
             
     def summary(self) -> Dict[str, int]:
         """Generates a numerical summary of the tasks."""
-        completed = sum(1 for t in self.tasks if t.status == "completed")
-        pending = sum(1 for t in self.tasks if t.status == "pending")
-        overdue = len(self.filter_tasks(overdue=True))
+        completed = 0
+        pending = 0
+        overdue = 0
+        today = date.today()
         
+        for t in self.tasks:
+            if t.status == "completed":
+                completed += 1
+            elif t.status == "pending":
+                pending += 1
+            
+            if t.due_date and t.due_date < today and t.status != "completed":
+                overdue += 1
+                
         return {
             "total": len(self.tasks),
             "completed": completed,
