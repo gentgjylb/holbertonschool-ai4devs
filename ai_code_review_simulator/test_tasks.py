@@ -1,6 +1,6 @@
 import unittest
-from datetime import date, timedelta
-from tasks import Task, TaskManager
+from datetime import date, timedelta, timezone
+from tasks import Task, TaskManager, SortAttribute
 
 class TestTaskMethods(unittest.TestCase):
     def test_task_creation(self):
@@ -8,6 +8,8 @@ class TestTaskMethods(unittest.TestCase):
         self.assertEqual(task.title, "Buy groceries")
         self.assertEqual(task.status, "pending")
         self.assertIsNone(task.due_date)
+        # Validation: Verify timezone-aware date markers applied
+        self.assertEqual(task.created_at.tzinfo, timezone.utc)
         
     def test_task_status_toggle(self):
         task = Task("Finish report")
@@ -23,6 +25,15 @@ class TestTaskMethods(unittest.TestCase):
         self.assertIn("urgent", task.tags)
         task.remove_tag("urgent")
         self.assertNotIn("urgent", task.tags)
+
+    def test_task_tags_formatted_lowercase(self):
+        # Validation: Ensure add_tag lowercase formatting logic applies successfully
+        task = Task("Code review")
+        task.add_tag("PYTHON")
+        task.add_tag("JavaScript")
+        self.assertIn("python", task.tags)
+        self.assertIn("javascript", task.tags)
+        self.assertNotIn("PYTHON", task.tags)
 
 class TestTaskManager(unittest.TestCase):
     def setUp(self):
@@ -79,6 +90,34 @@ class TestTaskManager(unittest.TestCase):
         
         results_tag = self.manager.filter_tasks(tag="devops")
         self.assertEqual(len(results_tag), 1)
+
+    def test_sort_tasks_enum_logic(self):
+        # Validation: Verify that sort_tasks strictly adheres to the SortAttribute Enum framework
+        self.manager.add_task("Zeta Task")
+        self.manager.add_task("Alpha Task")
+        
+        sorted_via_string = self.manager.sort_tasks(by="title")
+        self.assertEqual(sorted_via_string[0].title, "Alpha Task")
+        
+        with self.assertRaises(ValueError):
+            self.manager.sort_tasks(by="unsupported_sort_key")
+
+    def test_count_overdue_and_summary(self):
+        # Validation: Test the natively implemented summary mapping and custom count_overdue iterator
+        yesterday = date.today() - timedelta(days=1)
+        today = date.today()
+        
+        t1 = self.manager.add_task("Pending Overdue", due_date=yesterday)
+        t2 = self.manager.add_task("Done Normal Task", due_date=today)
+        t2.mark_completed()
+        
+        self.assertEqual(self.manager.count_overdue(), 1)
+        
+        summary = self.manager.summary()
+        self.assertEqual(summary['total'], 2)
+        self.assertEqual(summary['pending'], 1)
+        self.assertEqual(summary['completed'], 1)
+        self.assertEqual(summary['overdue'], 1)
 
 if __name__ == "__main__":
     unittest.main()
