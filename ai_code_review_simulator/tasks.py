@@ -89,7 +89,6 @@ class TaskManager:
         """Returns a copy of all tasks."""
         return list(self.tasks)
 
-    # REFACTORED FEATURE: Task filtering (O(N) single pass)
     def filter_tasks(self, 
                     status: Optional[str] = None, 
                     due_date: Optional[date] = None, 
@@ -97,8 +96,7 @@ class TaskManager:
                     tag: Optional[str] = None,
                     keyword: Optional[str] = None) -> List[Task]:
         """
-        Filters tasks based on various criteria.
-        This provides a highly flexible way to search and organize tasks.
+        Filters tasks based on various criteria using a single O(N) evaluation pass.
         """
         filtered = []
         tag_lower = tag.lower() if tag else None
@@ -121,39 +119,42 @@ class TaskManager:
             
         return filtered
         
-    def sort_tasks(self, by: SortAttribute = SortAttribute.DUE_DATE, reverse: bool = False) -> List[Task]:
-        """Sorts tasks depending on specified attribute using Enum logic."""
-        if by == SortAttribute.DUE_DATE:
-            max_date = date.max
-            return sorted(self.tasks, key=lambda t: t.due_date or max_date, reverse=reverse)
-        elif by == SortAttribute.CREATED_AT:
-            return sorted(self.tasks, key=lambda t: t.created_at, reverse=reverse)
-        elif by == SortAttribute.TITLE:
-            return sorted(self.tasks, key=lambda t: t.title.lower(), reverse=reverse)
-        elif by == SortAttribute.STATUS:
-            return sorted(self.tasks, key=lambda t: t.status, reverse=reverse)
-        else:
+    def sort_tasks(self, by: str = "due_date", reverse: bool = False) -> List[Task]:
+        """Sorts tasks depending on specified attribute utilizing strictly clamped SortAttribute logic."""
+        try:
+            sort_attr = SortAttribute(by)
+        except ValueError:
             raise ValueError(f"Unsupported sort attribute: {by}")
             
+        if sort_attr == SortAttribute.DUE_DATE:
+            max_date = date.max
+            return sorted(self.tasks, key=lambda t: t.due_date or max_date, reverse=reverse)
+        elif sort_attr == SortAttribute.CREATED_AT:
+            return sorted(self.tasks, key=lambda t: t.created_at, reverse=reverse)
+        elif sort_attr == SortAttribute.TITLE:
+            return sorted(self.tasks, key=lambda t: t.title.lower(), reverse=reverse)
+        elif sort_attr == SortAttribute.STATUS:
+            return sorted(self.tasks, key=lambda t: t.status, reverse=reverse)
+            
+    def count_overdue(self) -> int:
+        """Lightweight iterator correctly computing overdue counts natively."""
+        today = date.today()
+        return sum(1 for t in self.tasks if t.due_date and t.due_date < today and t.status != "completed")
+            
     def summary(self) -> Dict[str, int]:
-        """Generates a numerical summary of the tasks."""
+        """Generates a numerical summary of the tasks natively optimized to a single iteration pass."""
         completed = 0
         pending = 0
-        overdue = 0
-        today = date.today()
         
         for t in self.tasks:
             if t.status == "completed":
                 completed += 1
             elif t.status == "pending":
                 pending += 1
-            
-            if t.due_date and t.due_date < today and t.status != "completed":
-                overdue += 1
                 
         return {
             "total": len(self.tasks),
             "completed": completed,
             "pending": pending,
-            "overdue": overdue
+            "overdue": self.count_overdue()
         }
