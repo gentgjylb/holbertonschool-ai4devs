@@ -30,10 +30,13 @@ As a **solo developer**, I want the system to generate a formatted `mvp_concept.
 from my inputs so that I have a version-controllable planning document ready to commit.
 
 ## User Story 8
-As a **startup founder**, I want to generate a system architecture document from my accepted features so that I can present a clear technical structure to my development team.
+As a **startup founder**, I want to generate a system architecture document from my
+accepted features so that I can present a clear technical plan to my development team.
 
 ## User Story 9
-As a **bootcamp graduate**, I want to receive an AI-generated data model from my accepted features so that I can start implementing my database immediately with a validated schema.
+As a **bootcamp graduate**, I want to receive an AI-generated data model from my
+accepted features so that I can implement my database schema immediately and accurately.
 
 ## User Story 10
-As a **hackathon participant**, I want to download all generated planning documents as a single ZIP file so that I can deliver a complete MVP plan to my team in one step.
+As a **hackathon participant**, I want to export all generated planning documents as a
+single ZIP file so that I can share the complete MVP plan with my team in one step.
