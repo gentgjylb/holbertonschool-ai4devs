@@ -29,12 +29,14 @@ As a **solo developer**, I want to review all AI-generated suggestions before th
 saved so that I remain in control of the final MVP definition.
 
 ## User Story 8
-As a **startup founder**, I want to see a high-level architecture diagram for my MVP so
-that I can understand how the system components fit together before writing any code.
+As a **startup founder**, I want to generate a high-level architecture overview from my
+accepted features so that I can share a concrete technical plan with co-founders or
+developers without needing to write it manually.
 
 ## User Story 9
-As a **bootcamp graduate**, I want a data model suggestion based on my described features
-so that I know what entities and relationships to implement in my database.
+As a **bootcamp graduate**, I want to receive an AI-generated data model based on my
+accepted features so that I can start building my database schema immediately without
+spending hours designing it from scratch.
 
 ## User Story 10
 As a **hackathon participant**, I want to export all generated documents (concept,
