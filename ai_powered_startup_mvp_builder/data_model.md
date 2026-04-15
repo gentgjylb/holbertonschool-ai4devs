@@ -2,123 +2,66 @@
 
 ## Overview
 
-The data model is designed around a **session-scoped project** where no user
-authentication is required. A session owns one active project. A project contains
-features prioritized by the user, user stories generated from those features, and a
-record of any exports produced. The three primary entities are **Project**, **Feature**,
-and **UserStory**.
-
----
+The data model consists of three core entities: Project, Feature, and UserStory. A Project holds the startup idea and generated metadata. Features belong to a Project and represent individual product capabilities. UserStories are generated from Features and form the project backlog.
 
 ## Entities
 
-### 1. Project
+### Project
 
-The central entity. Represents a single MVP concept created within a browser session.
-All other entities belong to a project.
+Stores the startup idea and AI-generated planning output for a session.
 
-| Field | Type | Constraints | Description |
-|---|---|---|---|
-| `id` | UUID | PRIMARY KEY | Unique project identifier. |
-| `session_id` | VARCHAR(128) | NOT NULL, INDEX | Anonymous browser session token that owns this project. |
-| `title` | VARCHAR(255) | NOT NULL | Short name for the startup idea (e.g., "AI MVP Builder"). |
-| `raw_idea` | TEXT | NOT NULL | Original plain-language description entered by the user. |
-| `problem_statement` | TEXT | NULLABLE | AI-extracted problem statement; populated after intake. |
-| `target_users` | TEXT | NULLABLE | AI-extracted description of the intended user audience. |
-| `constraints` | TEXT | NULLABLE | User-defined constraints: time, budget, team size (free text). |
-| `status` | ENUM | NOT NULL, DEFAULT `draft` | Lifecycle state: `draft`, `scoped`, `exported`. |
-| `created_at` | TIMESTAMP | NOT NULL, DEFAULT NOW() | When the project was first created. |
-| `updated_at` | TIMESTAMP | NOT NULL | Automatically updated on every write. |
+| Field | Type | Description |
+|---|---|---|
+| id | UUID | Primary key. |
+| session_id | VARCHAR | Identifier of the anonymous browser session. |
+| title | VARCHAR | Short name for the startup idea. |
+| raw_idea | TEXT | Original plain-text idea entered by the user. |
+| problem_statement | TEXT | AI-generated problem statement. |
+| target_users | TEXT | AI-generated description of the target audience. |
+| constraints | TEXT | User-defined constraints such as time and budget. |
+| created_at | TIMESTAMP | When the project was created. |
+| updated_at | TIMESTAMP | When the project was last modified. |
 
-**Acceptance criteria:** A project cannot transition to `scoped` until at least one
-feature with priority `must_have` exists and `problem_statement` is non-null.
+### Feature
 
----
+Represents a single product feature within a Project. Limited to 10 per project.
 
-### 2. Feature
+| Field | Type | Description |
+|---|---|---|
+| id | UUID | Primary key. |
+| project_id | UUID | Foreign key referencing Project. |
+| title | VARCHAR | Short name of the feature. |
+| description | TEXT | What the feature does. |
+| priority | VARCHAR | MoSCoW value: must_have, should_have, could_have, or wont_have. |
+| in_scope | BOOLEAN | Whether the feature is within the project constraints. |
+| created_at | TIMESTAMP | When the feature was added. |
 
-Represents a single product capability scoped to a project. Capped at 10 per project
-to enforce the MVP constraint. Each feature carries a MoSCoW priority and an explicit
-in-scope flag that reflects constraint validation results.
+### UserStory
 
-| Field | Type | Constraints | Description |
-|---|---|---|---|
-| `id` | UUID | PRIMARY KEY | Unique feature identifier. |
-| `project_id` | UUID | NOT NULL, FOREIGN KEY → Project.id | Owning project. |
-| `title` | VARCHAR(255) | NOT NULL | Short feature name (e.g., "AI-Guided Idea Intake"). |
-| `description` | TEXT | NOT NULL | Full description of what the feature does and why it matters. |
-| `priority` | ENUM | NOT NULL | MoSCoW value: `must_have`, `should_have`, `could_have`, `wont_have`. |
-| `in_scope` | BOOLEAN | NOT NULL, DEFAULT TRUE | Set to `false` by the constraint checker if the feature exceeds limits. |
-| `ai_suggested` | BOOLEAN | NOT NULL, DEFAULT TRUE | `true` = AI-generated; `false` = manually added by the user. |
-| `position` | SMALLINT | NOT NULL | Display order within the project (1–10). |
-| `created_at` | TIMESTAMP | NOT NULL, DEFAULT NOW() | When the feature was added to the project. |
+A user story generated from an in-scope Feature, stored for export and backlog use.
 
-**Constraints:** A `CHECK` constraint enforces that the total number of features per
-`project_id` never exceeds 10.
+| Field | Type | Description |
+|---|---|---|
+| id | UUID | Primary key. |
+| feature_id | UUID | Foreign key referencing Feature. |
+| project_id | UUID | Foreign key referencing Project. |
+| role | VARCHAR | The user role in the story (e.g. founder, developer). |
+| action | TEXT | What the user wants to do. |
+| benefit | TEXT | Why the user wants to do it. |
+| full_text | TEXT | Complete story: As a [role], I want [action] so that [benefit]. |
+| created_at | TIMESTAMP | When the story was generated. |
 
----
-
-### 3. UserStory
-
-Represents a structured user story automatically derived from an in-scope feature.
-Stored as discrete role/action/benefit fields so individual parts can be queried or
-edited independently, as well as a pre-assembled full-text string for export.
-
-| Field | Type | Constraints | Description |
-|---|---|---|---|
-| `id` | UUID | PRIMARY KEY | Unique user story identifier. |
-| `feature_id` | UUID | NOT NULL, FOREIGN KEY → Feature.id | Source feature this story was derived from. |
-| `project_id` | UUID | NOT NULL, FOREIGN KEY → Project.id | Owning project (denormalized for efficient querying). |
-| `role` | VARCHAR(100) | NOT NULL | User role performing the action (e.g., "startup founder"). |
-| `action` | TEXT | NOT NULL | The specific system action the user wants to perform. |
-| `benefit` | TEXT | NOT NULL | The measurable outcome the user expects from the action. |
-| `full_text` | TEXT | NOT NULL | Assembled story: "As a [role], I want to [action] so that [benefit]." |
-| `approved` | BOOLEAN | NOT NULL, DEFAULT FALSE | Set to `true` once the user confirms the story before export. |
-| `created_at` | TIMESTAMP | NOT NULL, DEFAULT NOW() | When the story was generated. |
-
-**Acceptance criteria:** Only stories where `approved = true` are included in the
-exported backlog document.
-
----
-
-### 4. ExportRecord
-
-Tracks each ZIP export snapshot generated for a project. Allows the user to re-download
-an earlier export within the same session without regenerating files.
-
-| Field | Type | Constraints | Description |
-|---|---|---|---|
-| `id` | UUID | PRIMARY KEY | Unique export identifier. |
-| `project_id` | UUID | NOT NULL, FOREIGN KEY → Project.id | Owning project. |
-| `file_key` | VARCHAR(512) | NOT NULL, UNIQUE | Storage path or object key for the generated ZIP archive. |
-| `file_size_bytes` | INTEGER | NULLABLE | Size of the archive in bytes; populated after generation. |
-| `document_count` | SMALLINT | NOT NULL, DEFAULT 0 | Number of `.md` files bundled in the export. |
-| `created_at` | TIMESTAMP | NOT NULL, DEFAULT NOW() | When the export was generated. |
-| `downloaded_at` | TIMESTAMP | NULLABLE | Timestamp of the most recent download by the user. |
-
----
-
-## Entity Relationship Diagram
+## Relationships
 
 ```
 Project
-  │
-  │ 1 : N  (max 10 features)
-  ├──────────────────► Feature
-  │                       │
-  │                       │ 1 : N
-  │                       └──────► UserStory
-  │
-  │ 1 : N
-  └──────────────────► ExportRecord
+  |
+  |-- (1 to many) --> Feature
+                        |
+                        |-- (1 to many) --> UserStory
 ```
 
----
-
-## Relationships Summary
-
-| From | To | Cardinality | Notes |
-|---|---|---|---|
-| Project | Feature | 1 : N (max 10) | Only features where `in_scope = true` are acted upon. |
-| Project | ExportRecord | 1 : N | Unlimited exports; each is a point-in-time snapshot. |
-| Feature | UserStory | 1 : N | One story generated per in-scope feature by default; user can add more. |
+| Relationship | Cardinality | Description |
+|---|---|---|
+| Project to Feature | 1 to many | A project contains up to 10 features. |
+| Feature to UserStory | 1 to many | Each feature generates one or more user stories. |
