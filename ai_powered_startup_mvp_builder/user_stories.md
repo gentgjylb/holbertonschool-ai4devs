@@ -40,3 +40,11 @@ accepted features so that I can implement my database schema immediately and acc
 ## User Story 10
 As a **hackathon participant**, I want to export all generated planning documents as a
 single ZIP file so that I can share the complete MVP plan with my team in one step.
+
+## User Story 11
+As a **product manager**, I want to preview each generated document before exporting so
+that I can verify the content is accurate and complete before sharing it externally.
+
+## User Story 12
+As a **solo developer**, I want to restart the MVP planning session at any point so that
+I can explore a different idea without leftover data affecting my new plan.
