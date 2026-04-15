@@ -24,8 +24,3 @@ As a developer, I want to generate a formatted mvp_concept.md file from my input
 ## User Story 8
 As a founder, I want to generate a system architecture document from my accepted features so that I can share a clear technical plan with my development team.
 
-## User Story 9
-As a developer, I want to generate a data model based on my accepted features so that I can start implementing my database schema immediately.
-
-## User Story 10
-As a user, I want to download all planning documents as a ZIP file so that I can share the complete MVP plan with my team in one step.
