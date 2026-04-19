@@ -1,0 +1,222 @@
+:root {
+    --bg-dark: #0f111a;
+    --bg-panel: #1a1d2d;
+    --primary: #7c3aed;
+    --primary-hover: #6d28d9;
+    --accent-blue: #3b82f6;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #2dd4bf22;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    display: flex;
+    height: 100vh;
+}
+
+.hidden { display: none !important; }
+
+/* Layout */
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--bg-panel);
+    padding: 2rem;
+    border-right: 1px solid var(--border);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+.nav {
+    list-style: none;
+    padding: 0;
+}
+
+.nav li {
+    padding: 1rem 0;
+    color: var(--text-muted);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav li.active {
+    color: var(--primary);
+}
+
+/* Main Content */
+.content {
+    flex: 1;
+    padding: 3rem;
+    overflow-y: auto;
+}
+
+.step {
+    display: none;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+
+input, textarea {
+    width: 100%;
+    max-width: 600px;
+    padding: 0.75rem;
+    background: #23273b;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--primary);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: #334155;
+    color: white;
+}
+
+/* Result Box */
+.result-box {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: unset;
+    border: 1px solid var(--primary);
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+    max-width: 600px;
+}
+
+/* Kanban / Features */
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.feature-card {
+    background: #1e293b;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-top: 4px solid var(--accent-blue);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.feature-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #e2e8f0;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.priority-tag {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: rgba(124, 58, 237, 0.2);
+    color: #c4b5fd;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-top: 1rem;
+}
+
+/* Stories */
+.user-stories-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+}
+
+.user-stories-list li {
+    background: #1e293b;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+}
+
+/* Markdown pane */
+.split-pane {
+    display: flex;
+    margin-top: 2rem;
+    height: 500px;
+}
+
+.pane {
+    flex: 1;
+    background: #1e293b;
+    padding: 2rem;
+    border-radius: 12px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-family: monospace;
+    line-height: 1.6;
+}

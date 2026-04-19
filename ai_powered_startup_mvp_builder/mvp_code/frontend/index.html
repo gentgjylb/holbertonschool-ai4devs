@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Startup MVP Builder</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h1 class="logo">MVP Builder <span>AI</span></h1>
+            <ul class="nav">
+                <li id="nav-intake" class="active">1. Idea Intake</li>
+                <li id="nav-features">2. Features</li>
+                <li id="nav-stories">3. User Stories</li>
+                <li id="nav-export">4. Export</li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content">
+            <!-- Step 1: Idea Intake -->
+            <section id="step-intake" class="step active">
+                <h2>Describe Your Startup Idea</h2>
+                <div class="form-group">
+                    <label>Project Title</label>
+                    <input type="text" id="project-title" placeholder="e.g. NextGen Task Manager" />
+                </div>
+                <div class="form-group">
+                    <label>The Idea</label>
+                    <textarea id="project-idea" rows="6" placeholder="I want to build an app that..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Constraints (Optional)</label>
+                    <input type="text" id="project-constraints" placeholder="e.g. 1 month timeline, $0 budget" />
+                </div>
+                <button class="btn btn-primary" id="btn-intake">Analyze Idea &rarr;</button>
+                <div id="intake-output" class="hidden result-box"></div>
+            </section>
+
+            <!-- Step 2: Features -->
+            <section id="step-features" class="step">
+                <h2>Feature Prioritization</h2>
+                <button class="btn btn-primary" id="btn-generate-features">Generate Features</button>
+                <div id="features-container" class="kanban-board hidden">
+                    <!-- Features will be grouped by priority here -->
+                </div>
+                <button class="btn btn-secondary hidden" id="btn-proceed-stories" style="margin-top: 20px;">Proceed to Stories &rarr;</button>
+            </section>
+
+            <!-- Step 3: User Stories -->
+            <section id="step-stories" class="step">
+                <h2>User Stories Backlog</h2>
+                <button class="btn btn-primary" id="btn-generate-stories">Convert to Stories</button>
+                <ul id="stories-list" class="hidden user-stories-list"></ul>
+                <button class="btn btn-secondary hidden" id="btn-proceed-export" style="margin-top: 20px;">Proceed to Export &rarr;</button>
+            </section>
+
+            <!-- Step 4: Export -->
+            <section id="step-export" class="step">
+                <h2>MVP Concept Document</h2>
+                <button class="btn btn-primary" id="btn-generate-export">View Final Document</button>
+                <div class="split-pane hidden" id="export-pane">
+                    <div class="pane markdown-preview" id="markdown-output"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
